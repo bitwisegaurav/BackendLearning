@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import ApiError from "./ApiError.util";
+import ApiError from "./ApiError.util.js";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -22,7 +22,6 @@ const uploadImage = async (localFilePath) => {
     } catch (error) {
         fs.unlinkSync(localFilePath);
         console.log(error);
-        // return new ApiError(500, "File is not uploaded on cloudinary");
         return null;
     }
 };
