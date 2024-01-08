@@ -1,6 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import ApiError from "./ApiError.util.js";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -15,10 +14,10 @@ const uploadImage = async (localFilePath) => {
             localFilePath,
             { resource_type: "auto" },
         );
-        console.log(`File uplaoded. ${cloudinaryUploadValue.url}`);
-        console.log(cloudinaryUploadValue);
+        // console.log(`File uplaoded. ${cloudinaryUploadValue.url}`);
+        // console.log(cloudinaryUploadValue);
         fs.unlinkSync(localFilePath);
-        return cloudinaryUploadValue;
+        return cloudinaryUploadValue.url;
     } catch (error) {
         fs.unlinkSync(localFilePath);
         console.log(error);
