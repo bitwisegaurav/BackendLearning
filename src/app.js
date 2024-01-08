@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 import cors from "cors";
 
 const app = express();
@@ -12,8 +13,14 @@ app.use(
     }),
 );
 app.use(express.json({ limit: "30kb" }));
-app.use(express.urlencoded({ extended: true, limit: "20kb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
+
+// import routers
+import userRouter from "./routers/user.routes.js";
+
+// use routers
+app.use("/api/v1/user", userRouter);
 
 export { app };
