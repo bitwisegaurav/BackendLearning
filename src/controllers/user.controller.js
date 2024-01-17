@@ -12,13 +12,13 @@ const options = {
 const generateAccessAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
-        const acessToken = await user.generateAccessToken();
+        const accessToken = await user.generateAccessToken();
         const refreshToken = await user.generateRefreshToken();
 
         user.refreshToken = refreshToken;
         await user.save({ validateBeforeSave: false });
 
-        return { acessToken, refreshToken };
+        return { accessToken, refreshToken };
     } catch (error) {
         throw new ApiError(
             500,
@@ -144,17 +144,17 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 
     // create a new object for response without password and refreshToken
-    const userResponse = ({
-        _id,
-        username,
-        email,
-        fullName,
-        avatar,
-        coverImage,
-    } = user);
+    // const userResponse = ({
+    //     _id,
+    //     username,
+    //     email,
+    //     fullName,
+    //     avatar,
+    //     coverImage,
+    // } = user);
 
     // or fetch data from database and remove password and refreshToken
-    // const userResponse = await User.findById(user._id).select("-password -refreshToken")
+    const userResponse = await User.findById(user._id).select("-password -refreshToken")
 
     // send both tokens as cookies to the user
     return res
