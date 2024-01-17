@@ -19,7 +19,7 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
         );
 
         const user = await User.findById(decodedValues?._id).select(
-            -password - refreshToken,
+            "-password -refreshToken"
         );
 
         if (!user) {
