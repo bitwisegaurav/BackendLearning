@@ -25,4 +25,13 @@ const uploadImage = async (localFilePath) => {
     }
 };
 
-export { uploadImage };
+const deleteImage = async (publicIds) => {
+    try {
+        await cloudinary.uploader.destroy(publicIds);
+        return true;
+    } catch (error) {
+        return false;
+    }
+};
+
+export { uploadImage, deleteImage };

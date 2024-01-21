@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.util.js";
 import { ApiResponse } from "../utils/ApiResponse.util.js";
 import { asyncHandler } from "../utils/asyncHandler.util.js";
-import { uploadImage } from "../utils/cloudinary.util.js";
+import { deleteImage, uploadImage } from "../utils/cloudinary.util.js";
 
 const options = {
     httpOnly: true,
@@ -244,8 +244,10 @@ const updateUserPassword = asyncHandler(async (req, res) => {
 
     const { oldPassword, newPassword } = req.body;
 
+    console.log(oldPassword, newPassword, req.body);
+
     // check user input
-    if (!(oldPassword && newPassword)) {
+    if (!oldPassword || !newPassword) {
         throw new ApiError(400, "Please provide old and new password");
     }
 
@@ -307,7 +309,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
-    const user = res.user;
+    const user = req.user;
 
     if (!user) {
         throw new ApiError(
@@ -330,6 +332,16 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     if (!coverImageLocalPath) {
         throw new ApiError(400, "Please provide cover image image");
     }
+
+    // delete previous avatar image from cloudinary
+    const previousAvatar = req.user.avatar.split('/').pop().split('.')[0];
+
+    const isDeleted = await deleteImage([previousAvatar]);
+
+    if (!isDeleted) {
+        console.log("Failed to delete avtavar image");
+    }
+
 
     // upload image on cloudinary
     const coverImage = await uploadImage(coverImageLocalPath);
@@ -364,6 +376,15 @@ const updateUserAvatarImage = asyncHandler(async (req, res) => {
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Please provide avatar image");
+    }
+
+    // delete previous avatar image from cloudinary
+    const previousAvatar = req.user.avatar.split('/').pop().split('.')[0];
+
+    const isDeleted = await deleteImage(previousAvatar);
+
+    if (!isDeleted) {
+        console.log("Failed to delete avtavar image");
     }
 
     // upload image on cloudinary
