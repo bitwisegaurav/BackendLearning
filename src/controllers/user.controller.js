@@ -334,7 +334,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     }
 
     // delete previous avatar image from cloudinary
-    const previousAvatar = req.user.avatar.split('/').pop().split('.')[0];
+    const previousAvatar = req.user.coverImage.split('/').pop().split('.')[0];
 
     const isDeleted = await deleteImage([previousAvatar]);
 
